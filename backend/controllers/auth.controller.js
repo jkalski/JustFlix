@@ -1,5 +1,6 @@
 import { User } from "../models/User.model.js";
 import bcryptjs from "bcryptjs";
+import { generateTokenAndSetCookie } from "../utils/generateToken.js";
 
 export async function signup(req, res) {
     try {
@@ -33,7 +34,7 @@ export async function signup(req, res) {
 
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt);
-        
+
 
 
         const PROFILE_PICS = ["/avatar1.png", "/avatar2.png", "/avatar3.png"];
@@ -46,16 +47,21 @@ export async function signup(req, res) {
             username,
             image
         });
-        // postman
+        
+            generateTokenAndSetCookie(newUser._id, res);
+            await newUser.save();
 
-        await newUser.save();
-//remove password from response 
-        res.status(201).json({
-            success: true, user: {
-                ...newUser._doc,
-                password:""
-            }
-        });
+            //remove password from response 
+            res.status(201).json({
+                success: true, user: {
+                    ...newUser._doc,
+                    password: ""
+                }
+            });
+         
+
+
+
 
     } catch (error) {
         console.log("Error in signup", error.message);
@@ -64,10 +70,46 @@ export async function signup(req, res) {
 }
 
 export async function login(req, res) {
-    res.send("Login route");
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({ success: false, msg: "all fields are required" });
+        }
+
+        const user = await User.findOne({ email: email})
+        if(!user){
+            return res.status(404).json({ success: false, msg: "Invalid credentials" });
+        }
+
+        const isPasswordCorrect = await bcryptjs.compare(password, user.password);
+
+        if(!isPasswordCorrect){
+            return res.status(400).json({ success: false, msg: "Invalid credentials" });
+        }
+
+        generateTokenAndSetCookie(user._id, res);
+
+        res.status(201).json({
+            success: true, user: {
+                ...user._doc,
+                password: ""
+            }
+        });
+
+    } catch (error) {
+        console.log("Error in login controller", error.message);
+        res.status(500).json({ success: false, msg: "Internal server error " });
+    }
 }
 
 export async function logout(req, res) {
-    res.send("Logout route");
+    try {
+        res.clearCookie("jwt-justflix");
+        res.status(200).json({ success: true, msg: "Logged out successfully" });
+    } catch (error) {
+        console.log("Error in logout controller", error.message);
+        res.status(500).json({ success: false, msg: "Internal server error" });
+    }
 }
 
