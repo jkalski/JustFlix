@@ -1,16 +1,21 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 
 const AuthScreen = () => {
     const [email, setEmail] = useState("");
+    const navigate = useNavigate();
+    const handleFormSubmit = (e) => {
+        e.preventDefault();
+        navigate("/signup?email=" + email);
+    }
 
     return (
         <div className="hero-bg relative">
             {/*Navbar*/}
             <header className="max-w-6x1 mx-auto flex items-center justify-between p-4">
                 <img src="/netflix-logo.png" alt="logo" className="w-32 md:w-52" />
-                <Link to={"/ogin"} className="text-white bg-red-600 py-1 px-2 rounded">
+                <Link to={"/login"} className="text-white bg-red-600 py-1 px-2 rounded">
                     Sign In
                 </Link>
             </header>
@@ -20,10 +25,10 @@ const AuthScreen = () => {
 
             <div className="flex flex-col items-center justify-center text-center py-40 text-white max-w-6xl mx-auto">
                 <h1 className="text-4xl md:text-6xl font-bold mb-4">Unlimited movies, Tv shows, and more</h1>
-                <p className="text-lg mb-4">Watch anywher. cancel anytime.</p>
+                <p className="text-lg mb-4">Watch anywhere. Cancel anytime.</p>
                 <p className="mb-4">Ready to watch? Enter your email to create or restart your membership.</p>
 
-                <form className="flex flex-col md:flex-row gap-4 w-1/2">
+                <form className="flex flex-col md:flex-row gap-4 w-1/2" onSubmit={handleFormSubmit}>
                     <input
                         type="email"
                         placeholder="Email address"
