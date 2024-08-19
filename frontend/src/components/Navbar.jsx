@@ -31,7 +31,7 @@ const Navbar = () => {
                     <Link to="/" className='hover:underline'onClick={() => setContentType("tv")} >
                         Tv Shows
                     </Link>
-                    <Link to="/" className='hover:underline'>
+                    <Link to="/history" className='hover:underline'>
                         Search History
                     </Link>
                 </div>
@@ -65,7 +65,7 @@ const Navbar = () => {
                     >
                         Tv Shows
                     </Link>
-                    <Link to={"/search"}
+                    <Link to={"/history"}
                         className='block p-2 hidden:underline'
                         onClick={toggleMobileMenu}
                     >
