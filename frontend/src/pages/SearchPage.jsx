@@ -35,7 +35,7 @@ const SearchPage = () => {
         }
     };
 
-    console.log("results: ", results);
+
 
 
     return (
