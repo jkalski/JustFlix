@@ -1,4 +1,4 @@
-Justflix
+
 Justflix is a Netflix clone built using the MERN stack (MongoDB, Express, React, Node.js), Tailwind CSS, and JavaScript. It is a fully functional web application designed to provide a seamless user experience for streaming movies and TV shows.
 
 Features
